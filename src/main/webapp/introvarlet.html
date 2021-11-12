@@ -1,0 +1,178 @@
+<html>
+<head>
+    <title>JSP - Hello World</title>
+
+    <script>
+    <!-- qui va js, ma all'interno di <script> possono andare anche altri linguaggi, senza specificare il type  .si mette qui oerchè head è blocco globale, quindi tutto cò che difinisce è globale-->
+
+    var a = "marco"; //var non si usa più, ma sta let, in js ci sono i tipi di dato, ma ce l'ha l'oggetto, non la variabile di riferimento
+
+    console.log(a);
+
+    a = 10;//js non è fortemente tipizzato, dato che a non ha un dato, ma il tipo di dato è sempre NELL'OGGETTO REFERENZIATO
+    console.log(a);
+    a= true;
+    console.log(a);
+    console.log(typeof  a);//questo è simile al instanceof id java
+    //quindi js è molto errorpron
+
+
+    var b = undefined;
+    console.log(b);//si può fare , e l valore che assume è : undefined
+
+    //oppure posso fare
+    var c=undefined;//questo significa che ripartiamo da qui con questo valore
+    console.log(typeof c);
+    console.log(a);
+
+    b=null
+    console.log(typeof b);
+
+    //differenza tra var e let
+    //nel 2016 sono state introdotte le classi, il let etc
+    //le funzione in js, in input la varibile non ha un tipo, può essere qualsisai cosa, lo stesso vale per il tipo di ritorno
+    function getValue(condition){
+
+        //var value; hoisting cioè anche se lo dichiaro nel blocco if, essa viene dichiarato fuori dal if
+        if(condition){
+            var value = "blue";
+            return value;
+        } else {
+            console.log(value);//in js si può utilizazre una varibile che è stata dichiarata in un altro blocco, come in questocaso coon value
+            return null;
+        }
+
+    }
+    //quando ci sono più funzioni con lo stesso nome, il compialtore non ti dice nulla, e il browser avvierà l'ultima dichiarata
+
+
+    //ora con let
+//con la let non c'è hoisting, quindi value viene effetivamente dichiarato nell 'if
+    function getValue(condition){
+
+        if(condition){
+            let value = "blue";
+            return value;
+        } else {
+            console.log(value);
+            return null;
+        }
+
+    }
+
+
+    function getValue3(){
+        //questo si può
+        var count = 40;
+        var count = 50;
+
+        //let count; ti da errore, perchè c'è gia un count
+
+
+        //si può anche dichiarare una costante
+        const maxItems=30;//con le const ci DEVE essere per forza un valore di inizializzazione
+
+
+    }
+
+    //per definire un oggetto in js si utilizza la notazione json(java script object annotatio)
+    const person ={
+        name:"Marco"//const si applica a person e non alle variabili all'interno, quindi NO UN ALTRO person={}, ma SI person.name="ciccio"
+    }
+
+    person.name="ciccio";
+
+
+    //vediamo i for
+
+    function process(v){
+        console.log(v);
+    }
+
+    function menage(){
+        var items = ["a","b","c"];
+        for(var i = 0; i<items.length;i++){
+            process(items[i]);
+        }
+
+        console.log(i);//questa stamperà 3 perchè c'è hosting
+
+    }
+
+    //se fatto con let, i diventa undefined
+    function menage(){
+        var items = ["a","b","c"];
+        for(let i = 0; i<items.length;i++){
+            process(items[i]);
+        }
+
+        console.log(i);//questa stamperà 3 perchè c'è hosting
+
+    }
+    //in js si può mettere una chiamata funzione dopo la sua dichiarazione, dato che il browser fa il
+    //double pass, cioè un doppio giro sul codice, il browser prima va a leggere le funzione, al secodno giro le invoca
+
+
+    menage();
+
+    getValue3();
+    getValue(true);
+
+    //la closure con var stampa sempre 10 10 volte
+    var funcs = [];//array vuoto, in js gli array sono collezioni
+    for(var i=0; i<10;i++){
+        funcs.push(function(){
+            console.log(i);//clusure dato che viene chiuso il dubbio su i chi è
+        })
+    }
+
+    funcs.forEach(function (func){
+        func();
+    })
+
+
+
+    //con let i stampa da 1 a 9
+    var funcs = [];//array vuoto, in js gli array sono collezioni
+    for(let i=0; i<10;i++){
+        funcs.push(function(){
+            console.log(i);//closure giusta
+        })
+    }
+
+    funcs.forEach(function (func){
+        func();
+    })
+
+
+
+    //dove finiscono le chiarazione var?--->
+
+    var o = "marcoo";
+
+    function  f1(){
+        console.log(o);
+    }
+
+
+    console.log(window.RegExp);//widnow è l'oggetto di default che è il contenitore di tutte le variabili globali che definiamo CON VAR con let NO))
+    console.log((window.o));//equivale a o
+
+    var RegExp = "marcooo"//te lo peremtte di fare, cioè anche su nomi che rappresentano oggetti predefiniti, js ti permette di modificarlo
+    console.log(window.RegExp);
+
+
+    //FUNZIONI IN JS
+
+
+
+    </script>
+
+</head>
+<body>
+<h1><%= "Hello World!" %>
+</h1>
+<br/>
+<a href="hello-servlet">Hello Servlet</a>
+</body>
+</html>

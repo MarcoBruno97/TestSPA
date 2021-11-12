@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+
+
+
+        function manageClick1(){
+            let id = document.getElementById("id").value;
+            let desc = document.getElementById("desc").value;
+            let amount = document.getElementById("amount").value;
+            document.getElementById("response4").innerText = "";
+            document.getElementById("response1").innerText = "";
+            document.getElementById("response2").innerText = "";
+            document.getElementById("response3").innerText = "";
+
+            let xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function () {
+
+                if (xmlHttp.readyState == 4)
+                    if (xmlHttp.status == 200) {
+                        let response = xmlHttp.responseXML;
+                        if(response.getElementsByTagName("message4").length==1){//forse meglio non far ritornare il msg4 dal server, e stamparlo qui
+                            document.getElementById("response4").innerText = response.getElementsByTagName("message4")[0].firstChild.nodeValue;
+                            return;
+                        }
+
+                        if(response.getElementsByTagName("message2").length==1){
+                            document.getElementById("response2").innerText = response.getElementsByTagName("message2")[0].firstChild.nodeValue;
+
+                        } if(response.getElementsByTagName("message1").length==1){
+                            document.getElementById("response1").innerText = response.getElementsByTagName("message1")[0].firstChild.nodeValue;
+
+                        }
+                        if(response.getElementsByTagName("message3").length==1){
+                            document.getElementById("response3").innerText = response.getElementsByTagName("message3")[0].firstChild.nodeValue;
+
+                        }
+
+                    }
+            }
+
+            xmlHttp.open("GET", "http://localhost:8080/TestSPA_war_exploded/invoice?id=" + id +"&desc="+ desc + "&amount="+ amount, true);//sigiifca che dobbiamo prima configurarla la richiesta, mappandola su backend,
+            xmlHttp.send(null)
+
+
+
+        }
+    </script>
+
+
+
+</head>
+<body>
+
+
+Id: <input type="text" id="id"> <spane id="response1"></spane>
+<br/>
+Description: <input type="text" id="desc"> <spane id="response2"></spane>
+<br/>
+Amount:  <input type="text" id="amount"><spane id="response3"></spane>
+<br/>
+<button onclick="manageClick1()">Send</button>
+<br/>
+<div id="response4"></div>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        //se dichiari una funzione con 1 parametro, gli puoi passare infiniti argomenti
+
+        //QUINDI NON C'è IL SUPPORTO ALL'OVERLOAD
+        function f1(a,b){
+            console.log("in fi()" + a + " " + b)
+            console.log(f1.arguments.length);//arugments rappresenta tutti gli alrgomenti passati, un po' come ... in java
+            for(let i=0; i<f1.arguments.length;i++){
+                console.log(f1.arguments[i]);
+            }
+        }
+        f1();
+        //ma si puo
+        f1(1,2,3);//quindi il prototitpo non esiste in javascript
+        f1(1);//b è undefined;
+
+        //la regola è che quelli che dichiari nella firma, sono obbligatori, altrimenti non funziona la funzione, glia ltri sono opzionali
+
+
+
+
+
+
+        //GESTIONE DEI VALORI DI DEFAULT
+
+        function makeRequest(url, timeout,callback){//le funzioni possono essere passati in input, un po' come le labda expression in java
+            timeout = timeout || 2000;//se è falso il valore in timeout, diventa 2000, in javascript si parla però di Truthy/falsy
+            callback = callback || function (){}; //così diciamo che se timout non viene passato, assume il significato di 2000
+            //in reata si può fare anche il default nella firma come makeRequest(url, timeout = 6000,callback = function (){})
+
+            timeout = (typeof timeout !== "undefined")? timeout : 5000//typeof da indietro una stringa,
+            //NB in jd si può trovare
+            //=== e !== cio' vanno a confrontare non sono il valore, ma anche il tipo di dato, quindi evita la conversione implicita
+            //let b =10;
+            //let c = "10";
+            //if/c ==="10") vero if(b === "10") falso
+
+
+            console.log(url);
+            console.log(timeout);
+            console.log(callback);
+
+
+        }
+
+        makeRequest("/go.html");
+
+        //in js si puà prrendere il valore in input  da una funzione
+
+        function geValue(){
+            return 5;
+        }
+
+
+        function add(first, second = geValue()){
+            return first + second;
+        }
+
+
+        console.log(add(1,1));//da 2
+        console.log(add(1))//da 6
+
+
+
+
+        let value2 = 5;
+
+        function geValue2(){
+            return ++value2;//value2++ è diverso
+        }
+
+
+        function add2(first, second = geValue2()){
+            return first + second;
+        }
+
+
+        console.log(add2(1,1));//da 2
+        console.log(add2(1));//da 6 perché?
+        console.log(add2(1));//da 7
+
+
+
+        //correlazione html js
+
+        function manageClick(){
+            //alert("ok");
+           let username = document.getElementById("username").value;//js può anche alterare il dom, document si può prendere ciò che è stato modificato nell'html,come la casella di testo modificata
+            //per fare una richiesta ajax , che avviene in background. questo serve per legger la risposta del server
+            let xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function () {
+                //JSON
+                /*
+                if(xmlHttp.readyState == 4)//se la risposta del server è completa(1 è l'inizio della richiesta, 2 è richietsa in corso, 3 long running(ci sta mettendo tanto tempo), 4 compelatata)
+                    if(xmlHttp.status == 200) {//completata sì, ma solo con status 200, cioè tutto ok
+                        console.log("in onreadystatechange")
+                        let response = JSON.parse(xmlHttp.responseText)//potevamo scegliere anche una risposta di tipo xml, ecco perché si chiama ajax. Qui la riposta è ciò che sta inviando indietro BackendServlet.java
+                        console.log(response)
+                        document.getElementById("response").innerText=response.message;//serve metteree in introcfuction i valori che ritornn
+                    }
+                    */
+                //essa vuole una funzione che verrà invocata automaticamente quando arriva la richeista http(callback), cioè la risposta del server. Quindi onreadystatechange viene eseguita solo alla fine, quando arriva la risposta sel server
+
+
+                //XML
+                if (xmlHttp.readyState == 4)//se la risposta del server è completa(1 è l'inizio della richiesta, 2 è richietsa in corso, 3 long running(ci sta mettendo tanto tempo), 4 compelatata)
+                    if (xmlHttp.status == 200) {//completata sì, ma solo con status 200, cioè tutto ok
+                        let response = xmlHttp.responseXML;
+                        //console.log(response)
+                        console.log(response.getElementsByTagName("message")[0].firstChild.nodeValue);//dammi il tag message, tutti gli elementi col tag message, esso riporta un erray che contiene gli elementi col tag message, il first child è il nodo testuali, dato che in xml si parla di nodi
+                        document.getElementById("response").innerText = response.getElementsByTagName("message")[0].firstChild.nodeValue;//serve metteree in introcfuction i valori che ritornn
+                    }
+            }
+
+            xmlHttp.open("GET", "http://localhost:8080/TestSPA_war_exploded/backend?ts=" + new Date().getTime() +"&username="+ username, true);//sigiifca che dobbiamo prima configurarla la richiesta, mappandola su backend,
+                                                                                               // true significa che la richiesta è asincrona, cioè non blocco la'app che gira su browser'. Username è cioò che passiamo al server
+            xmlHttp.send(null)//significa attivare la richiesta, inviarla, ma si usa solo con GET
+
+
+
+        }
+
+
+    </script>
+</head>
+<body>
+
+    Username: <input type="text" id="username"  >
+<br/>
+    <button onclick="manageClick()">Send</button>
+    <div id="response"></div>
+
+</body>
+</html>
